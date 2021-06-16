@@ -1,0 +1,31 @@
+﻿Sector,Industry,S1 ticker,S1 Mktcap,S2 ticker,S2 Mktcap
+Commercial Services ,Advertising/Marketing services,OMC,17.989B,WPP,16.744B
+Commercial Services,Financial Publishing/Services,MCO,62.532B,SPGI,91.34B
+Communications,Major Telcos,VZ,242.981B,T,230.194B
+Consumer Durables,Homebuilding ,DHI,34.711B,LEN,31.247B
+Consumer Non Durables,Beverages,KO,235.978B,PEP,202.302B
+Consumer Non Durables,Household/Personal Care,PG,337.88B,UL,158.809B
+Consumer Non Durables,Household/Personal Care,CLX,22.551B,CHD,21.717B
+Consumer Services,Restaurants,MCD,172.903B,SBUX,130.916B
+Distribution Services,Medical Distributors,MCK,30.846B,ABC,23.934B
+Distribution Services,Electronic Distributors,ARW,8.80B,SNX,6.27B
+Electronic Tech,Telecom equipment,AAPL,2.127T,MSFT,1.868T
+Energy Minerals,Energy,XOM,257.272B,CVX,211.579B
+Finance,Major Banks,JPM,496.48B,BAC,362.996B
+Finance,Payments,V,484.02B,MA,360.65B
+Healthcare,Healthcare insurance,ANTM,96.45B,CI,90.426B
+Healthcare,Health tech,DHR,180.873B,TMO,180.427B
+Industrial Services,Oil and Gas Pipelines,ENB,78.896B,EPD,52.204B
+Non Energy Minerals ,Other Metals/Minerals,BHP,114.099B,RIO,110.059B
+Non Energy Minerals ,Precious Metals,NEM,56.68B,GOLD,42.71B
+Non Energy Minerals ,Steel,VALE,107.901B,MT,35.091B
+Process Industries,Chemicals,LIN,156.67B,APD,66.62B
+Producer Manufacturing ,Industrial Machinery,ASML,269.801B,AMAT,114.552B
+Retail Trade,Speciality Stores,COST,170.119B,TGT,105.067B
+Retail Trade,Speciality Stores,ORLY,38.601B,AZO,33.663B
+Retail Trade,Department Stores,KSS,9.66B,M,5.636B
+Technology Services,Packaged Software,ADBE,230.496B,ORCL,228.57B
+Transportation,Railroads,UNP,150.25B,CSX,76.54B
+Transportation,Air Freight/Couriers,UPS,188.38B,FDX,82.37B
+Transportation,Airlines,LUV,36.5B,RYAAY,25.9B
+Utilities ,Electric Utilities,DUK,80.05B,SO,68.98B
