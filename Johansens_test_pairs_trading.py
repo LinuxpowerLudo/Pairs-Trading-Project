@@ -148,7 +148,7 @@ def johansens_backtest(sym1, sym2):
         df1['adf_pval'] = adf_m
         df1['avg'] = avg_m
         #df1['stop_test'] = (avg_m >= 0.5) #(remove the hash to use this method)
-        #df1.loc[df1['stop_test'], 'numUnits'] = 0
+        #df1.loc[df1['stop_test'], 'numUnits'] = 0 #(remove the hash to use this method)
 
         ###STOP LOSS for extreme movments in spread 
         #### OPTION 2: using Kendal's Tau to measure trending in spread time series
@@ -183,9 +183,9 @@ def johansens_backtest(sym1, sym2):
         
     main_df = main_df.reset_index(drop=True)
     port_val = (main_df['port rets'].dropna()+1).cumprod()
-    port_ret = (port_val.iloc[-1])-1
-    port_std = port_val.std()
-    shrp = port_ret/port_std
+    avg_daily_return = main_df['port rets'].mean()
+    avg_daily_std = main_df['port rets'].std()
+    annualised_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
     total_return = port_val.iloc[-1]
     
     #refine port_val to fit the timeline
@@ -193,7 +193,7 @@ def johansens_backtest(sym1, sym2):
     shift_amt = len(s1)-len(port_val)
     port_val = port_val.reindex(range(len(s1))).shift(shift_amt)
     
-    return main_df, port_val,total_return,shrp, yr_sharpe, yr_ret 
+    return main_df, port_val,total_return,annualised_sharpe, yr_sharpe, yr_ret 
 
 def pairs_trade(pairs, chosen_list = None):
     
@@ -202,11 +202,9 @@ def pairs_trade(pairs, chosen_list = None):
         chosen_list = [*range(len(pairs))]
     else:
         chosen_lsit = chosen_list
-    overall_return = 0
-    overall_vol = 0
-    overall_sharpe = 0
+    
     #to get the size of data / index
-    s1 = pd.read_csv('/.../ingestable_csvs/daily/OMC.csv').close
+    s1 = pd.read_csv('/Users/saikartheek/Desktop/av_data/ingestable_csvs/daily/OMC.csv').close
     port_val_df = pd.DataFrame(columns = [list(pairs.keys())[index] for index in chosen_list], 
                                index = range(len(s1))) #create a port_df
    
@@ -220,16 +218,9 @@ def pairs_trade(pairs, chosen_list = None):
         #run manual backtest and save output 
         res = johansens_backtest(stock1, stock2)
         
-        strat_return = res[2]
-        strat_sharpe = res[3]
         portfolio_value = res[1]
         
         port_val_df['Pair '+str(i)] = portfolio_value #add the portfolio value to the df
-        
-        #variables to output
-        overall_return += (1/len(chosen_list)) * (strat_return-1)
-        overall_vol += (1/len(chosen_list)) * (portfolio_value.std())
-        overall_sharpe += (1/len(chosen_list)) * strat_sharpe
         
         print('Done backtesting pair {}'.format(i))
     
@@ -244,6 +235,12 @@ def pairs_trade(pairs, chosen_list = None):
             port_val = (port_val_df.loc[row] * alloc).sum()
             total_val.append(port_val)
     total_port_val = pd.Series(total_val)
+    avg_daily_return = ((total_port_val/total_port_val.shift(1))-1).mean()
+    avg_daily_std = ((total_port_val/total_port_val.shift(1))-1).std()
+    overall_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
+    overall_vol = ((total_port_val/total_port_val.shift(1))-1).std() * sqrt(252) # annualised vol of strat
+    overall_return = total_port_val.iloc[-1]
+    
     result = [overall_return, overall_vol, overall_sharpe, total_port_val]
     return result
 
