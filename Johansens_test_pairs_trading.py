@@ -186,7 +186,7 @@ def johansens_backtest(sym1, sym2):
     avg_daily_return = main_df['port rets'].mean()
     avg_daily_std = main_df['port rets'].std()
     annualised_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
-    total_return = port_val.iloc[-1]
+    total_return = port_val.iloc[-1]-1
     
     #refine port_val to fit the timeline
     port_val = port_val.reset_index(drop=True)
@@ -204,7 +204,7 @@ def pairs_trade(pairs, chosen_list = None):
         chosen_lsit = chosen_list
     
     #to get the size of data / index
-    s1 = pd.read_csv('/Users/saikartheek/Desktop/av_data/ingestable_csvs/daily/OMC.csv').close
+    s1 = pd.read_csv('/.../ingestable_csvs/daily/OMC.csv').close
     port_val_df = pd.DataFrame(columns = [list(pairs.keys())[index] for index in chosen_list], 
                                index = range(len(s1))) #create a port_df
    
