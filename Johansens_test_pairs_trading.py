@@ -239,7 +239,7 @@ def pairs_trade(pairs, chosen_list = None):
     avg_daily_std = ((total_port_val/total_port_val.shift(1))-1).std()
     overall_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
     overall_vol = ((total_port_val/total_port_val.shift(1))-1).std() * sqrt(252) # annualised vol of strat
-    overall_return = total_port_val.iloc[-1]
+    overall_return = total_port_val.iloc[-1]-1
     
     result = [overall_return, overall_vol, overall_sharpe, total_port_val]
     return result
