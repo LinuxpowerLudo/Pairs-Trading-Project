@@ -37,7 +37,8 @@ In this approach, for a given set of pairs, Johansen's test was used to assess t
 RESULTS:
 A basic snapshot of this strategy's results:
 
-<img width="414" alt="Johansen" src="https://user-images.githubusercontent.com/30551461/122651086-344f4380-d154-11eb-9d71-3a2e41e8c1cd.png">
+<img width="400" alt="Johansen" src="https://user-images.githubusercontent.com/30551461/122651086-344f4380-d154-11eb-9d71-3a2e41e8c1cd.png">
+
 
 ## Method 2: "Cointegrated Kendall's Tau Test"
 In this approach, the traditional Cointegrated Augmented Dickey Fuller (CADF) test has been modified, to include the Kendall's Tau test instead of the Augmented Dickey Fuller test to assess mean reversion / stationarity in cointegrating pairs.
@@ -51,6 +52,9 @@ In this approach, the traditional Cointegrated Augmented Dickey Fuller (CADF) te
 RESULTS: 
 A basic snapshot of this strategy's results:
 
+<img width="400" alt="CKT" src="https://user-images.githubusercontent.com/30551461/122651460-97da7080-d156-11eb-921e-c6abe159749d.png">
+
+
 ## Method 3: Kalman Filters Approach
 In this approach, the hedge ratio pertaining to a given pair has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is that it is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between the stocks. 
 
@@ -62,5 +66,6 @@ In this approach, the hedge ratio pertaining to a given pair has been calculated
 4. If the current Zscore crosses a prespecified threshold of Zscore, then the trades are placed accordingly. 
 
 RESULTS:
-A basic snapshot of this strategy's results are as follows:
+A basic snapshot of this strategy's results:
 
+<img width="400" alt="Kalman" src="https://user-images.githubusercontent.com/30551461/122651479-b3457b80-d156-11eb-9bac-ea84b94df83e.png">
