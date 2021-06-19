@@ -55,3 +55,6 @@ In this approach, the hedge ratio pertaining to a given pair has been calculated
 3. With the spread, the halflife and Zscore is calculated just as in the above strategies. 
 4. If the current Zscore crosses a prespecified threshold of Zscore, then the trades are placed accordingly. 
 
+RESULTS:
+A basic snapshot of this strategy's results are as follows:
+
