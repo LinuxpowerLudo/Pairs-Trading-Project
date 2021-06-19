@@ -1,6 +1,6 @@
 # Pairs-Trading-Project
 
-**(Disclaimer, this is a purely educational project. Be aware that backtested performance may often be deceptive – trade at your own risk!)**
+*_(Disclaimer, this is a purely educational project. Be aware that backtested performance may often be deceptive – trade at your own risk!)_*
 
 (The approaches in the project were inspired by the book published by Dr. Ernest P Chan - "Algorithmic Trading")
 
