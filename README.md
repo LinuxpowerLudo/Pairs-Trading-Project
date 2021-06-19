@@ -5,6 +5,15 @@ In this project, a select list of pairs were chosen for pairs trading, based on 
 
 In this project, three methods were used to assess the spread between chosen stock pairs: Johansen's Test, modified Cointegrated Augmented Dickey Fuller Test (or as I reffered to in this project as "Cointegrated Kendall's Tau test", and Kalman Filters. 
 
+The core buy and sell signal framework of the thre approaches below are similar to that of a simple bollinger bands strategy, only we are trading the spread between two stocks in a pair:-
+
+Long entry -> (cur Zscore < -entry Zscore)  & (prev Zscore > - entry Zscore)
+Long exit -> (cur Zscore > -exit Zscore) & (prev Zscore < - exit Zscore)
+Short entry -> (cur Zscore > entryZscore) & (prev Zscore < entry Zscore)
+Short exit -> (cur Zscore < exit Zscore) & (prev Zscore > exit Zscore)
+
+note: The entry and exit Zscores can be considered as hyperparameters, but in the below approaches it is set to be between 1 to 1.5 (entry Zscore), and 0 (exit Zscore)
+
 ## Method 1: Johansen's Test:
 In this approach, for a given set of pairs, Johansen's test was used to assess the Hedge Ratio between two stocks in a pair and place trades when the spread deviates by a prespecified threshold from the mean. 
 
@@ -31,5 +40,10 @@ RESULTS:
 A basic snapshot of this strategy's results are as follows:
 
 ## Method 3: Kalman Filters Approach
-In this approach, the hedge ratio pertaining to a given spread has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between the stocks. 
+In this approach, the hedge ratio pertaining to a given pair has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is that it is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between the stocks. 
+
+1. The trading loging is similar to that of the above strategies. For any given day during the backtest, it calculates the dynamicl hedge ratio series using the past one year historical prices. 
+2. With this series of hedge ratios, the spread is calculated for the past year of prices. 
+3. With the spread, the halflife and Zscore is calculated just as in the above strategies. 
+4. If the current Zscore crosses a prespecified threshold of Zscore, then the trades are placed accordingly. 
 
