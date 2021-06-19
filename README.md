@@ -19,7 +19,7 @@ A basic snapshot of this strategy's results are as follows:
 
 
 ## Method 2: "Cointegrated Kendall's Tau Test"
-For this pairs trading project, the traditional Cointegrated Augmented Dickey Fuller (CADF) test has been modified, to include the Kendall's Tau test instead of the Augmented Dickey Fuller test to assess mean reversion / stationarity in cointegrating pairs.
+In this approach, the traditional Cointegrated Augmented Dickey Fuller (CADF) test has been modified, to include the Kendall's Tau test instead of the Augmented Dickey Fuller test to assess mean reversion / stationarity in cointegrating pairs.
 
 1. The trading logic, as with the traditional CADF test pairs trading approach, Linear Regression is used to find the hedge ratio between two stocks in a pair for a specified time period of historical prices at any given time during the backtest. 
 2. Using that hedge ratio, the spread is calculated.
@@ -30,4 +30,6 @@ For this pairs trading project, the traditional Cointegrated Augmented Dickey Fu
 RESULTS: 
 A basic snapshot of this strategy's results are as follows:
 
+## Method 3: Kalman Filters Approach
+In this approach, the hedge ratio pertaining to a given spread has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between the stocks. 
 
