@@ -111,7 +111,7 @@ def kalman_backtest(sym1, sym2):
         zSc = []
         for d in range(start,end): #for every day in our yearly range between start and end
             inp_x = x.loc[d-240:d].reset_index(drop=True) #Kalman Filter only reads non indexed series
-            inp_y = y.loc[d-240:d].reset_index(drop=True)
+            inp_y = y.loc[d-240:d].reset_index(drop=True) #looking back into the past 1 yr of prices
             state_means = KalmanFilterRegression(KalmanFilterAverage(inp_x), #running Kalman Filter on past 1yr data
                                                  KalmanFilterAverage(inp_y))
             hedge_ratio = - state_means[:,0] #extract the hedge ratio series
