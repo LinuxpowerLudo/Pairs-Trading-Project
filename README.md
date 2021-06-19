@@ -28,7 +28,7 @@ note: The entry and exit Zscores can be considered as hyperparameters, but in th
 ## Method 1: Johansen's Test:
 In this approach, for a given set of pairs, Johansen's test was used to assess the Hedge Ratio between two stocks in a pair and place trades when the spread deviates by a prespecified threshold from the mean. 
 
-1. The trading logic is that the algorithm calculates the eigen vectors and eigen values using last year's prices, and uses the eigen vector with correspoding largest eigen value as the hedge ratio. 
+1. The trading logic is that the algorithm calculates the eigen vectors and eigen values using last year's prices, and uses the corresponding eigen vector of the largest eigen value as the hedge ratio. 
 2. Using this hedge ratio, it calculates the spread. 
 3. With that spread, the halflife is calculated, which is used as a window measure for the rolling mean and standard deviation of the spread.
 4. Lastly the Zscore is computed that assess the deviation of the spread from the mean spread as a multiple of the standard deviation.
@@ -39,6 +39,7 @@ A basic snapshot of this strategy's results:
 
 <img width="400" alt="Johansen" src="https://user-images.githubusercontent.com/30551461/122651086-344f4380-d154-11eb-9d71-3a2e41e8c1cd.png">
 
+(Scope for further imporvement: The strategy assumes a constant hedge ratio for the whole of current year, based on the hedge ratio obtained from running the Johansen's test over the preceding year's prices. This can further be enhanced, by considering a more "evolving" hedge ratio from running the Johansen's test real time over a moving historical time interval. For example, for any given day in the backtest, Johansen's test would be run on the preceding 6month or 1year from that day, and then use the hedge ratio from it to identify the spread and Zscore.)  
 
 ## Method 2: "Cointegrated Kendall's Tau Test"
 In this approach, the traditional Cointegrated Augmented Dickey Fuller (CADF) test has been modified, to include the Kendall's Tau test instead of the Augmented Dickey Fuller test to assess mean reversion / stationarity in cointegrating pairs.
