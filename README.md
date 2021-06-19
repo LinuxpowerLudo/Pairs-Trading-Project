@@ -1,5 +1,10 @@
 # Pairs-Trading-Project
 
+[![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
+[![GitHub license](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://github.com/surelyourejoking/MachineLearningStocks/blob/master/LICENSE.txt)
+
+
 (Credit: The approaches in the project were inspired by the book published by Dr. Ernest P Chan - "Algorithmic Trading")
 
 In this project, a select list of pairs were chosen for pairs trading backtest over the past 22 years, based on their individual stock characteristics, whose spread/difference has a tendency to mean revert over a give time period. An intial list of 30 pairs were chosen on random based on their individual market capitalisations and industries. A more focused subset of those pairs were chosen discretionarily, based on insights into company/industry dynamics and size (basically, assessing the tendency of the stocks in a pair to move in tandem). Please note, that this approach may not always lead to gains as it is exposed to personal biases. This drawback warrants further research into developing a more reliable systematic approach to selecting pairs. 
@@ -8,17 +13,17 @@ In this project, a select list of pairs were chosen for pairs trading backtest o
 
 In this project, three methods were used to assess the spread between chosen stock pairs: Johansen's Test, modified Cointegrated Augmented Dickey Fuller Test (or as I reffered to in this project as "Cointegrated Kendall's Tau test", and Kalman Filters. 
 
-*The core buy and sell signal framework of the three approaches below are similar to that of a simple bollinger bands strategy, only we are trading the spread between two stocks in a pair:-*
+The core buy and sell signal framework of the three approaches below are similar to that of a simple bollinger bands strategy, only we are trading the spread between two stocks in a pair:-
 
-*Long entry -> (cur Zscore < -entry Zscore)  & (prev Zscore > - entry Zscore)*
+```txt
+Long entry -> (cur Zscore < -entry Zscore)  & (prev Zscore > -entry Zscore)
+Long exit -> (cur Zscore > -exit Zscore) & (prev Zscore < -exit Zscore)
+Short entry -> (cur Zscore > entryZscore) & (prev Zscore < entry Zscore)
+Short exit -> (cur Zscore < exit Zscore) & (prev Zscore > exit Zscore)
 
-*Long exit -> (cur Zscore > -exit Zscore) & (prev Zscore < - exit Zscore)*
-
-*Short entry -> (cur Zscore > entryZscore) & (prev Zscore < entry Zscore)*
-
-*Short exit -> (cur Zscore < exit Zscore) & (prev Zscore > exit Zscore)*
-
-note: The entry and exit Zscores can be considered as hyperparameters, but in the below approaches it is set to be between 1 to 1.5 (entry Zscore), and 0 (exit Zscore)
+note: The entry and exit Zscores can be considered as hyperparameters, but in the below approaches 
+      it is set to be between 1 to 1.5 (entry Zscore), and 0 (exit Zscore)
+```
 
 ## Method 1: Johansen's Test:
 In this approach, for a given set of pairs, Johansen's test was used to assess the Hedge Ratio between two stocks in a pair and place trades when the spread deviates by a prespecified threshold from the mean. 
