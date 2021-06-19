@@ -4,7 +4,7 @@ In this project, a select list of pairs were chosen for pairs trading, based on 
 
 In this project, three methods were used to assess the spread between chosen stock pairs: Johansen's Test, modified Cointegrated Augmented Dickey Fuller Test (or as I reffered to in this project as "Cointegrated Kendall's Tau test", and Kalman Filters. 
 
-##Method 1: Johansen's Test:
+## Method 1: Johansen's Test:
 In this approach, for a given set of pairs, Johansen's test was used to assess the Hedge Ratio between two stocks in a pair and place trades when the spread deviates by a prespecified threshold from the mean. 
 
 1. The trading logic is that the algorithm calculates the eigen vectors and eigen values using last year's prices, and uses the eigen vector with correspoding largest eigen value as the hedge ratio. 
