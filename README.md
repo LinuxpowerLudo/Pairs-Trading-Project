@@ -11,7 +11,7 @@ In this project, a select list of pairs were chosen for pairs trading backtest o
 
 *Disclaimer: this is a purely educational project. Be aware that backtested performance may often be deceptive – trade at your own risk!*
 
-In this project, three methods were used to assess the spread between chosen stock pairs: Johansen's Test, modified Cointegrated Augmented Dickey Fuller Test (or as I reffered to in this project as "Cointegrated Kendall's Tau test", and Kalman Filters. 
+In this project, three methods were used to assess the spread between chosen stock pairs: Johansen's Test, modified Cointegrated Augmented Dickey Fuller Test (or as I reffered to in this project, "Cointegrated Kendall's Tau test"), and Kalman Filters. 
 
 The core buy and sell signal framework of the three approaches below are similar to that of a simple bollinger bands strategy, only we are trading the spread between two stocks in a pair:-
 
