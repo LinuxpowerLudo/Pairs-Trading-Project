@@ -1,4 +1,7 @@
 # Pairs-Trading-Project
+
+In this project, a select list of pairs have been chosen for pairs trading, based on their cointegrating relationship, whose spread/difference mean reverts over any give time period. 
+
 For this pairs trading project, for a given set of cointegrating pairs, we will use Johansen's test to assess the Hedge Ratio between two stocks in a pair and place trades when the spread deviates by a prespecified threshold from the mean.
 
 
