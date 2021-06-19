@@ -57,7 +57,7 @@ A basic snapshot of this strategy's results over the past 22 years:
 
 
 ## Method 3: Kalman Filters Approach
-In this approach, the hedge ratio pertaining to a given pair has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is that it is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between the stocks. 
+In this approach, the hedge ratio pertaining to a given pair has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is that it is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between stocks. 
 
 (For an intuitive and clear understanding of Kalman Filters, check out this [video](https://www.youtube.com/watch?v=mwn8xhgNpFY&t=4s))
 
