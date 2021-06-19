@@ -35,7 +35,7 @@ In this approach, for a given set of pairs, Johansen's test was used to assess t
 5. Then the logic is similar to that of bollinger bands, where, if the Zscore goes above the prespecified threshold, we short the spread, and if it goes below the prespecified threshold we long the spread, on the basis that the spread would eventually mean revert. 
 
 RESULTS:
-A basic snapshot of this strategy's results:
+A basic snapshot of this strategy's results over the past 22 years:
 
 <img width="400" alt="Johansen" src="https://user-images.githubusercontent.com/30551461/122651086-344f4380-d154-11eb-9d71-3a2e41e8c1cd.png">
 
@@ -51,7 +51,7 @@ In this approach, the traditional Cointegrated Augmented Dickey Fuller (CADF) te
 5. Using Kendall's Tau measure, if the measure indicated a trending behaviour (KT<-0.5 | KT>0.3), there would no trades placed. The threshold values '-0.5' and '0.3' can be looked at as hyperparameters that could be changed to maximise returns for any given pair, or a more systematic approach can be devised to justify the use of certain values as thresholds. In general, The Kendall's Tau measure has a maximum and a minimum of 1 and -1 respectively, if the series is trending the measure would divulge towards the max and min, and if it is not trending it would remain close to 0.
 
 RESULTS: 
-A basic snapshot of this strategy's results:
+A basic snapshot of this strategy's results over the past 22 years:
 
 <img width="400" alt="CKT" src="https://user-images.githubusercontent.com/30551461/122651460-97da7080-d156-11eb-921e-c6abe159749d.png">
 
@@ -67,6 +67,6 @@ In this approach, the hedge ratio pertaining to a given pair has been calculated
 4. If the current Zscore crosses a prespecified threshold of Zscore, then the trades are placed accordingly. 
 
 RESULTS:
-A basic snapshot of this strategy's results:
+A basic snapshot of this strategy's results over the past 22 years:
 
 <img width="400" alt="Kalman" src="https://user-images.githubusercontent.com/30551461/122651479-b3457b80-d156-11eb-9bac-ea84b94df83e.png">
