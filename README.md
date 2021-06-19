@@ -11,8 +11,11 @@ In this project, three methods were used to assess the spread between chosen sto
 *The core buy and sell signal framework of the three approaches below are similar to that of a simple bollinger bands strategy, only we are trading the spread between two stocks in a pair:-*
 
 *Long entry -> (cur Zscore < -entry Zscore)  & (prev Zscore > - entry Zscore)*
+
 *Long exit -> (cur Zscore > -exit Zscore) & (prev Zscore < - exit Zscore)*
+
 *Short entry -> (cur Zscore > entryZscore) & (prev Zscore < entry Zscore)*
+
 *Short exit -> (cur Zscore < exit Zscore) & (prev Zscore > exit Zscore)*
 
 note: The entry and exit Zscores can be considered as hyperparameters, but in the below approaches it is set to be between 1 to 1.5 (entry Zscore), and 0 (exit Zscore)
