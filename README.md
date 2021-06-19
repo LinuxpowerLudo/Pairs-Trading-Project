@@ -39,7 +39,7 @@ A basic snapshot of this strategy's results:
 
 <img width="400" alt="Johansen" src="https://user-images.githubusercontent.com/30551461/122651086-344f4380-d154-11eb-9d71-3a2e41e8c1cd.png">
 
-(Scope for further imporvement: The strategy assumes a constant hedge ratio for the whole of current year, based on the hedge ratio obtained from running the Johansen's test over the preceding year's prices. This can further be enhanced, by considering a more "evolving" hedge ratio from running the Johansen's test real time over a moving historical time interval. For example, for any given day in the backtest, Johansen's test would be run on the preceding 6month or 1year from that day, and then use the hedge ratio from it to identify the spread and Zscore.)  
+(_Scope for further imporvement_: The strategy assumes a constant hedge ratio for the whole of current year, based on the hedge ratio obtained from running the Johansen's test over the preceding year's prices. This can further be enhanced, by considering a more "evolving" hedge ratio from running the Johansen's test real time over a moving historical time interval. For example, for any given day in the backtest, Johansen's test would be run on the preceding 6month or 1year from that day, and then use the hedge ratio from it to identify the spread and Zscore.)  
 
 ## Method 2: "Cointegrated Kendall's Tau Test"
 In this approach, the traditional Cointegrated Augmented Dickey Fuller (CADF) test has been modified, to include the Kendall's Tau test instead of the Augmented Dickey Fuller test to assess mean reversion / stationarity in cointegrating pairs.
