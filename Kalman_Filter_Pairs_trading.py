@@ -179,7 +179,7 @@ def kalman_backtest(sym1, sym2):
     avg_daily_std = main_df['port rets'].std()
     try:
         annualised_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
-    except:
+    except ZeroDivisionError:
         annualised_sharpe = 0.0
     total_return = port_val.iloc[-1]-1
     
