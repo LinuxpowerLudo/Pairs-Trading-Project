@@ -21,8 +21,8 @@ Long exit -> (cur Zscore > -exit Zscore) & (prev Zscore < -exit Zscore)
 Short entry -> (cur Zscore > entryZscore) & (prev Zscore < entry Zscore)
 Short exit -> (cur Zscore < exit Zscore) & (prev Zscore > exit Zscore)
 
-note: The entry and exit Zscores can be considered as hyperparameters, but in the below approaches 
-      it is set to be between 1 to 1.5 (entry Zscore), and 0 (exit Zscore)
+note: The entry and exit Zscores can be considered as hyperparameters, but in the below 
+      approaches it is set to be between 1 to 1.5 (entry Zscore), and 0 (exit Zscore)
 ```
 
 ## Method 1: Johansen's Test:
