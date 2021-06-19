@@ -1,10 +1,10 @@
 # Pairs-Trading-Project
 
-*_(Disclaimer, this is a purely educational project. Be aware that backtested performance may often be deceptive – trade at your own risk!)_*
-
 (The approaches in the project were inspired by the book published by Dr. Ernest P Chan - "Algorithmic Trading")
 
 In this project, a select list of pairs were chosen for pairs trading, based on their individual stock characteristics, whose spread/difference has a tendency to mean revert over a give time period. An intial list of 30 pairs were chosen on random based on their individual market capitalisations and industries. A more focused subset of those pairs were chosen discretionarily, based on insights into company/industry dynamics and size (basically, assessing the tendency of the stocks in a pair to move in tandem). Please note, that this approach may not always lead to gains as it is exposed to personal biases. This drawback warrants further research into developing a more reliable systematic approach to selecting pairs. 
+
+*Disclaimer: this is a purely educational project. Be aware that backtested performance may often be deceptive – trade at your own risk!*
 
 In this project, three methods were used to assess the spread between chosen stock pairs: Johansen's Test, modified Cointegrated Augmented Dickey Fuller Test (or as I reffered to in this project as "Cointegrated Kendall's Tau test", and Kalman Filters. 
 
