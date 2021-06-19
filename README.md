@@ -42,6 +42,8 @@ A basic snapshot of this strategy's results are as follows:
 ## Method 3: Kalman Filters Approach
 In this approach, the hedge ratio pertaining to a given pair has been calculated dynamically using Kalman Filters. The added benefit of using Kalman Filters instead of a simple Linear Regression, is that it is not fixed for a given time period. The hedge ratio dynamically evolves, by considering the new data inputs and arrives at a more realistic representation of the underpinning relationship between two stocks. Especially since they are continuously influenced by various factors and developments during any given time period. Hence it would be naive to simply label a fixed constant to represent the relationship between the stocks. 
 
+(For an intuitive and clear understanding of Kalman Filters, check out this [video](https://www.youtube.com/watch?v=mwn8xhgNpFY&t=4s))
+
 1. The trading loging is similar to that of the above strategies. For any given day during the backtest, it calculates the dynamicl hedge ratio series using the past one year historical prices. 
 2. With this series of hedge ratios, the spread is calculated for the past year of prices. 
 3. With the spread, the halflife and Zscore is calculated just as in the above strategies. 
