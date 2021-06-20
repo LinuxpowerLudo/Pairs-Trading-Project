@@ -64,7 +64,8 @@ In this approach, the hedge ratio pertaining to a given pair has been calculated
 1. The trading loging is similar to that of the above strategies. For any given day during the backtest, it calculates the dynamic hedge ratio series using the past one year historical prices from that day. 
 2. With this series of hedge ratios, the spread series is calculated for the past 1year of prices from that day. 
 3. With the spread series, the halflife and Zscore is calculated just as in the above strategies. 
-4. If the current Zscore (or latest Zscore - if you are at any given day during the backtest) crosses a prespecified threshold of Zscore, then the trades are placed according to our core buy and sell signal framework mentioned above. 
+4. If the current Zscore (or latest Zscore - if you are at any given day during the backtest) crosses a prespecified threshold of Zscore, then the trades are placed according to our core buy and sell signal framework mentioned above.
+5. An important consideration in this strategy, is on any given day when the trade is open, the algorithm regularly rebalances the allocation to each pair to match the updated hedge ratio obtained from the latest Kalman Filter Regression. 
 
 RESULTS:
 A basic snapshot of this strategy's results over the past 22 years:
