@@ -65,7 +65,7 @@ In this approach, the hedge ratio pertaining to a given pair has been calculated
 2. With this series of hedge ratios, the spread series is calculated for the past 1year of prices from that day. 
 3. With the spread series, the halflife and Zscore is calculated just as in the above strategies. 
 4. If the current Zscore (or latest Zscore - if you are at any given day during the backtest) crosses a prespecified threshold of Zscore, then the trades are placed according to our core buy and sell signal framework mentioned above.
-5. An important consideration in this strategy, is on any given day when the trade is open, the algorithm regularly rebalances the allocation to each pair to match the updated hedge ratio obtained from the latest Kalman Filter Regression. 
+5. An important consideration in this strategy is that on any given day when the position is open, the algorithm regularly rebalances the allocation to stocks to match the updated hedge ratio obtained from the latest Kalman Filter Regression. 
 
 RESULTS:
 A basic snapshot of this strategy's results over the past 22 years:
