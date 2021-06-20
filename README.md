@@ -2,7 +2,7 @@
 
 [![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-[![GitHub license](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://github.com/surelyourejoking/MachineLearningStocks/blob/master/LICENSE.txt)
+[![GitHub license](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://github.com/kartheek17/Pairs-Trading-Project/blob/master/LICENSE)
 
 
 (Credit: The approaches used in this project were inspired by the book published by Dr. Ernest P Chan - "Algorithmic Trading: Winning Strategies and their Rationale")
