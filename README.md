@@ -69,4 +69,4 @@ In this approach, the hedge ratio pertaining to a given pair has been calculated
 RESULTS:
 A basic snapshot of this strategy's results over the past 22 years:
 
-<img width="400" alt="Kalman" src="https://user-images.githubusercontent.com/30551461/122651479-b3457b80-d156-11eb-9bac-ea84b94df83e.png">
+<img width="400" alt="Kalman" src="https://user-images.githubusercontent.com/30551461/122688192-75208880-d238-11eb-9f33-fe45fa481aeb.png">
