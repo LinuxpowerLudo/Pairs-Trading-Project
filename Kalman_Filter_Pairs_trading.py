@@ -154,19 +154,36 @@ def kalman_backtest(sym1, sym2):
 
         df1['numUnits'] = df1['num units long'] + df1['num units short']
         
-        df1['spread pct ch'] = (df1['spread'] - df1['spread'].shift(1)) / ((df1['x'] * abs(df1['hr'])) + df1['y'])
-        df1['port rets'] = df1['spread pct ch'] * df1['numUnits'].shift(1)
+        #code to calculate the actual_port_rets that gives an accurate representation of strategy returns after considering regular rebalancing of initial investment
+        df1['investment'] = 0.0
+        df1['actual_spread'] = 0.0
+        df1['actual_port_rets'] = 0.0
+        for i in range(1, len(df1)):
+            if df1['numUnits'].loc[i] != 0.0:
+                if (df1['numUnits'].loc[i-1] == 0.0):
+                    df1['investment'].loc[i] = (df1['x'].loc[i] * abs(df1['hr'].loc[i])) + df1['y'].loc[i]
+                    df1['actual_spread'].loc[i] = df1['spread'].loc[i]
+                else:
+                    hr_update = (abs(df1['hr'].loc[i])-abs(df1['hr'].loc[i-1]))*df1['x'].loc[i]
+                    df1['investment'].loc[i] = df1['investment'].loc[i-1] + hr_update
+                    df1['actual_spread'].loc[i] = (df1['x'].loc[i] * df1['hr'].loc[i-1]) + df1['y'].loc[i]
+                    df1['actual_port_rets'].loc[i] = df1['numUnits'].loc[i-1]*(df1['actual_spread'].loc[i] - 
+                                                                               df1['actual_spread'].loc[i-1])/(df1['investment'].loc[i-1])
+            else:
+                if (df1['numUnits'].loc[i-1] != 0.0):
+                    df1['actual_spread'].loc[i] = (df1['x'].loc[i] * df1['hr'].loc[i-1]) + df1['y'].loc[i]
+                    df1['actual_port_rets'].loc[i] = df1['numUnits'].loc[i-1]*(df1['actual_spread'].loc[i] - 
+                                                                               df1['actual_spread'].loc[i-1])/(df1['investment'].loc[i-1])
 
-        df1['cum rets'] = df1['port rets'].cumsum()
-        df1['cum rets'] = df1['cum rets'] + 1
-
+        df1['actual_cum_rets'] = df1['actual_port_rets'].cumsum() + 1
+        
         try:
-            sharpe = ((df1['port rets'].mean() / df1['port rets'].std()) * sqrt(252)) 
+            sharpe = ((df1['actual_port_rets'].mean() / df1['actual_port_rets'].std()) * sqrt(252)) 
         except ZeroDivisionError:
             sharpe = 0.0
 
         #add the ret and hr to a list
-        yr_ret.append(df1['cum rets'].iloc[-1])
+        yr_ret.append(df1['actual_cum_rets'].iloc[-1])
         yr_sharpe.append(sharpe)
         main_df = pd.concat([main_df, df1])
         
@@ -174,9 +191,9 @@ def kalman_backtest(sym1, sym2):
         print('Year {} done'.format(count))
         
     main_df = main_df.reset_index(drop=True)
-    port_val = (main_df['port rets'].dropna()+1).cumprod()
-    avg_daily_return = main_df['port rets'].mean()
-    avg_daily_std = main_df['port rets'].std()
+    port_val = (main_df['actual_port_rets'].dropna()+1).cumprod()
+    avg_daily_return = main_df['actual_port_rets'].mean()
+    avg_daily_std = main_df['actual_port_rets'].std()
     try:
         annualised_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
     except ZeroDivisionError:
