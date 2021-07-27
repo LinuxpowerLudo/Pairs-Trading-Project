@@ -10,26 +10,7 @@ import ffn
 import warnings
 warnings.filterwarnings('ignore')
 
-%matplotlib inline
-
-
-def KalmanFilterRegression(x,y): #I resued this function from an article published by Xing Tao on quantinsti
-
-    delta = 1e-3
-    trans_cov = delta / (1 - delta) * np.eye(2) # How much random walk wiggles
-    obs_mat = np.expand_dims(np.vstack([[x], [np.ones(len(x))]]).T, axis=1)
-    
-    kf = KalmanFilter(n_dim_obs=1, n_dim_state=2, # y is 1-dimensional, (alpha, beta) is 2-dimensional
-                      initial_state_mean=[0,0],
-                      initial_state_covariance=np.ones((2, 2)),
-                      transition_matrices=np.eye(2),
-                      observation_matrices=obs_mat,
-                      observation_covariance=2,
-                      transition_covariance=trans_cov)
-    
-    # Use the observations y to get running estimates and errors for the state parameters
-    state_means, state_covs = kf.filter(y.values)
-    return state_means    
+%matplotlib inline  
 
 
 def KalmanFilterAverage(x): #I resued this function from an article published by Xing Tao on quantinsti
@@ -75,23 +56,21 @@ def ind_marker(stock): #function used to identify the start time index of a pair
     return index_marker
 
 #manual backtest of pairs trading using Kalman Filters
-def kalman_backtest(sym1, sym2):
-    stock1 = pd.read_csv('/.../ingestable_csvs/daily/{}.csv'.format(sym1))
-    stock2 = pd.read_csv('/.../ingestable_csvs/daily/{}.csv'.format(sym2))
+def kalman_backtest(sym1, sym2, entry_thresh, exit_thresh_percent):
+    stock1 = pd.read_csv('ingestable_csvs/daily/{}.csv'.format(sym1))
+    stock2 = pd.read_csv('ingestable_csvs/daily/{}.csv'.format(sym2))
     s1 = stock1.close
     s2 = stock2.close
-    
-    yr_ret = []
-    yr_sharpe = []
-    
+
     #define the time_line
-    max_start = max(ind_marker(sym1), ind_marker(sym2))
-    time_line = [*range(max_start+240,len(s1), 240)]
+    max_start = max(ind_marker(sym1), ind_marker(sym2)) # identifying common start date
+    time_line = [*range(max_start+240,len(s1), 240)] #list with yearly dates index
     
-    #iterating each year and running the backtest
+    
     main_df = pd.DataFrame(columns = ['x', 'y', 'spread', 'hr', 'zScore', 'long entry', 'long exit',
                                       'num units long', 'short entry', 'short exit', 'num units short',
                                       'numUnits'])
+    #iterating each year and running the backtest
     count = 0
     for i in time_line:
         if i == time_line[-1]:
@@ -100,40 +79,73 @@ def kalman_backtest(sym1, sym2):
         else: 
             start = i
             end = i+240
-
-        x, y = s1[start-240:end], s2[start-240:end] #used in calculating the Hedge Ratio
-        ax, ay = s1[start:end], s2[start:end] #the actual info to use for the trading and return calc
+        x, y = s1[start-240:end], s2[start-240:end] #calculates the hr real time using the past month series
+        ax, ay = s1[start:end], s2[start:end] #the actual df to use for the trading and return calc
         df1 = pd.DataFrame({'x':ax, 'y':ay})
         df1 = df1.reset_index(drop = True)
         
         hr = []
-        test_spread = []
-        zSc = []
-        for d in range(start,end): #for every day in our yearly range between start and end
+        spread_ser = []
+        zScore_ser = []
+        for d in range(start, end):
             inp_x = x.loc[d-240:d].reset_index(drop=True) #Kalman Filter only reads non indexed series
-            inp_y = y.loc[d-240:d].reset_index(drop=True) #looking back into the past 1 yr of prices
-            state_means = KalmanFilterRegression(KalmanFilterAverage(inp_x), #running Kalman Filter on past 1yr data
-                                                 KalmanFilterAverage(inp_y))
-            hedge_ratio = - state_means[:,0] #extract the hedge ratio series
-            spread = inp_y + (inp_x * hedge_ratio) #calculate the spread over the past one year data
-            test_spread.append(pd.Series(spread).iloc[-1])
-            hr.append(pd.Series(hedge_ratio).iloc[-1])
-            halflife = half_life(spread) #calculate the halflife over the past one year data
-            meanSpread = spread.rolling(window=halflife).mean()
-            stdSpread = spread.rolling(window=halflife).std()
-            zScore = (spread-meanSpread)/stdSpread #calculate the realtime zScore based on mean and std derived using halflife
-            zSc.append(pd.Series(zScore).iloc[-1]) #take the latest zScore and store in a list
-            
-        final_spread = pd.Series(test_spread).reset_index(drop=True)
-        df1['spread'] = final_spread
-        df1['zScore'] = pd.Series(zSc).reset_index(drop=True)
+            inp_y = y.loc[d-240:d].reset_index(drop=True)
+            if d == start:
+                delta = 1e-3
+                trans_cov = delta / (1 - delta) * np.eye(2)
+                
+                obs_mat = np.expand_dims(np.vstack([KalmanFilterAverage(inp_x), [np.ones(len(inp_x))]]).T, axis=1)
+                #Running the first kalman filter model using the past 1 year data
+                kf = KalmanFilter(n_dim_obs=1, n_dim_state=2,
+                                  initial_state_mean=np.zeros(2),
+                                  initial_state_covariance=np.ones((2, 2)),
+                                  transition_matrices=np.eye(2),
+                                  observation_matrices=obs_mat,
+                                  observation_covariance=1.0,
+                                  transition_covariance=trans_cov)
+                #storing the needed values to continue updating the kalman model
+                state_means, state_covs = kf.filter(KalmanFilterAverage(inp_y))
+                hist_state_means = state_means
+                hist_state_covs = state_covs
+                hr_ser = pd.Series(-state_means[:,0])
+                hr.append(hr_ser.iloc[-1]) #a.k.a hr
+                spread = inp_y + (inp_x * hr_ser) #computing the spread
+                spread_ser.append(spread.iloc[-1])
+                halflife = half_life(spread) #computing the halflife
+                meanSpread = pd.Series(spread).rolling(window=halflife).mean()
+                stdSpread = pd.Series(spread).rolling(window=halflife).std()
+                zScore = (pd.Series(spread)-meanSpread)/stdSpread #computing zScore
+                zScore_ser.append(zScore.iloc[-1])
+            else:
+                obs_mat = np.asarray([[KalmanFilterAverage(inp_x).iloc[-1], 1]])
+                #for every day following the first day, the kalman model is updated using the latest data point
+                u_state_means, u_state_covs = kf.filter_update(hist_state_means[-1], 
+                                                               hist_state_covs[-1], 
+                                                               observation = KalmanFilterAverage(inp_y).iloc[-1], 
+                                                               observation_matrix=obs_mat)
+                #reapeating the same process as above
+                hr_update = -u_state_means[0]
+                hr.append(hr_update)
+                hist_state_means = np.append(hist_state_means, [u_state_means], axis=0)
+                hist_state_covs = np.append(hist_state_covs, [u_state_covs], axis=0)
+                u_spread = inp_y.iloc[-1] + (inp_x.iloc[-1]* hr_update)
+                spread_ser.append(u_spread)
+                spread[-1] = u_spread
+                spread = spread.iloc[1:].reset_index(drop=True)
+                halflife = half_life(spread)
+                meanSpread = pd.Series(spread).rolling(window=halflife).mean()
+                stdSpread = pd.Series(spread).rolling(window=halflife).std()
+                zScore = (pd.Series(spread)-meanSpread)/stdSpread
+                zScore_ser.append(zScore.iloc[-1])
+        # storing the spread zScore and hedge ratio
+        df1['spread'] = pd.Series(spread_ser).reset_index(drop=True)
+        df1['zScore'] = pd.Series(zScore_ser).reset_index(drop=True)
         df1['hr'] = pd.Series(hr).reset_index(drop=True)
 
 
         #####################################
-        #using more stringent entryZscore (closer to 0) as the Kalman Filter hedge ratio is more sensitive to swings
-        entryZscore = 1 
-        exitZscore = 0
+        entryZscore = entry_thresh #entry_threshold
+        exitZscore = exit_thresh_percent * entry_thresh #exit_threshold
 
         # Set up num units long             
         df1['long entry'] = ((df1.zScore < - entryZscore) & ( df1.zScore.shift(1) > - entryZscore))
@@ -152,51 +164,68 @@ def kalman_backtest(sym1, sym2):
         df1['num units short'][0] = 0
         df1['num units short'] = df1['num units short'].fillna(method='pad')
 
+
         df1['numUnits'] = df1['num units long'] + df1['num units short']
         
-        #code to calculate the actual_port_rets that gives an accurate representation of strategy returns after considering regular rebalancing of initial investment
+        
+        #code to calculate the actual_port_rets that gives an accurate representation of strategy returns
+        #for each day that the position is open, the strategy is rebalanced according to the new hedge ratio
+        df1['is_trading']  = (df1['numUnits'] != 0)
         df1['investment'] = 0.0
         df1['actual_spread'] = 0.0
         df1['actual_port_rets'] = 0.0
-        for i in range(1, len(df1)):
-            if df1['numUnits'].loc[i] != 0.0:
-                if (df1['numUnits'].loc[i-1] == 0.0):
-                    df1['investment'].loc[i] = (df1['x'].loc[i] * abs(df1['hr'].loc[i])) + df1['y'].loc[i]
-                    df1['actual_spread'].loc[i] = df1['spread'].loc[i]
-                else:
+        #set initial investment
+        df1.loc[df1['is_trading'] & (df1['numUnits'].shift(1) == 0), 
+                'investment'] = (df1['x'] * abs(df1['hr'])) + df1['y']
+        #determine initial spread
+        df1.loc[df1['is_trading'] & (df1['numUnits'].shift(1) == 0), 
+                'actual_spread'] = df1['spread'] + ((df1['investment']*0.0005)*df1['numUnits']) #commission reflected in spreads
+
+        #calculate daily change in investment value
+        df1['hr_update'] = (abs(df1['hr'])-abs(df1['hr'].shift(1)))*df1['x'] #(increase the cost of x by 0.05%)#
+        #calculate the investment amounts after updation
+        for i in range(len(df1)):
+            if df1['is_trading'].loc[i]:
+                if df1['numUnits'].loc[i-1]!= 0:
                     hr_update = (abs(df1['hr'].loc[i])-abs(df1['hr'].loc[i-1]))*df1['x'].loc[i]
                     df1['investment'].loc[i] = df1['investment'].loc[i-1] + hr_update
-                    df1['actual_spread'].loc[i] = (df1['x'].loc[i] * df1['hr'].loc[i-1]) + df1['y'].loc[i]
-                    df1['actual_port_rets'].loc[i] = df1['numUnits'].loc[i-1]*(df1['actual_spread'].loc[i] - 
-                                                                               df1['actual_spread'].loc[i-1])/(df1['investment'].loc[i-1])
-            else:
-                if (df1['numUnits'].loc[i-1] != 0.0):
-                    df1['actual_spread'].loc[i] = (df1['x'].loc[i] * df1['hr'].loc[i-1]) + df1['y'].loc[i]
-                    df1['actual_port_rets'].loc[i] = df1['numUnits'].loc[i-1]*(df1['actual_spread'].loc[i] - 
-                                                                               df1['actual_spread'].loc[i-1])/(df1['investment'].loc[i-1])
 
-        df1['actual_cum_rets'] = df1['actual_port_rets'].cumsum() + 1
-        
+        df1.loc[df1['is_trading'] & (df1['numUnits'].shift(1) != 0), 
+                'actual_spread'] = (df1['x'] * df1['hr'].shift(1)) + df1['y']
+        #including commission charges from rebalancing daily
+        df1.loc[df1['is_trading'] & (df1['numUnits'].shift(1) != 0),
+                'hr_update'] = (abs(df1['hr'])-abs(df1['hr'].shift(1)))*df1['x']
+        df1.loc[df1['is_trading'] & (df1['numUnits'].shift(1) != 0), 
+                'actual_port_rets'] = df1['numUnits'].shift(1)*(df1['actual_spread'] - df1['actual_spread'].shift(1) 
+                                                                + (df1['hr_update']*0.0005))/(df1['investment']
+                                                                                              .shift(1))
+        df1.loc[(df1['numUnits'] == 0) & (df1['numUnits'].shift(1) != 0),
+                'actual_spread'] = (df1['x'] * df1['hr'].shift(1)) + df1['y']
+        #reduce the dif in spread by 0.05% of latest investment amount to arrive at net actual_port_rets#
+        df1.loc[(df1['numUnits'] == 0) & (df1['numUnits'].shift(1) != 0), 
+                'actual_port_rets'] = df1['numUnits'].shift(1)*(df1['actual_spread'] - df1['actual_spread'].shift(1)
+                                                                + (df1['investment'].shift(1)*0.0005))/(df1['investment']
+                                                                                                      .shift(1))
+
+
         try:
-            sharpe = ((df1['actual_port_rets'].mean() / df1['actual_port_rets'].std()) * sqrt(252)) 
+            sharpe = ((df1['actual_port_rets'].mean() / df1['actual_port_rets'].std()) * np.sqrt(252)) 
         except ZeroDivisionError:
             sharpe = 0.0
 
-        #add the ret and hr to a list
-        yr_ret.append(df1['actual_cum_rets'].iloc[-1])
-        yr_sharpe.append(sharpe)
+        #add the yearly dataframe to the main dataframe
         main_df = pd.concat([main_df, df1])
         
         count += 1
         print('Year {} done'.format(count))
         
     main_df = main_df.reset_index(drop=True)
-    port_val = (main_df['actual_port_rets'].dropna()+1).cumprod()
+    port_val = (main_df['actual_port_rets'].dropna()+1).cumprod() #portfolio value / performance
     avg_daily_return = main_df['actual_port_rets'].mean()
     avg_daily_std = main_df['actual_port_rets'].std()
     try:
-        annualised_sharpe = (avg_daily_return/avg_daily_std) * sqrt(252)
-    except ZeroDivisionError:
+        annualised_sharpe = (avg_daily_return/avg_daily_std) * np.sqrt(252)
+    except:
         annualised_sharpe = 0.0
     total_return = port_val.iloc[-1]-1
     
@@ -205,7 +234,7 @@ def kalman_backtest(sym1, sym2):
     shift_amt = len(s1)-len(port_val)
     port_val = port_val.reindex(range(len(s1))).shift(shift_amt)
     
-    return main_df, port_val,total_return,annualised_sharpe, yr_sharpe, yr_ret 
+    return main_df, port_val,total_return,annualised_sharpe
 
 def pairs_trade(pairs, chosen_list = None):
     
@@ -228,7 +257,8 @@ def pairs_trade(pairs, chosen_list = None):
         stock2 = pairs['Pair ' + str(i)][1]
         
         #run manual backtest and save output 
-        res = kalman_backtest(stock1, stock2)
+        entry_thresh, exit_thresh_percent = 1, 0
+        res = kalman_backtest(stock1, stock2, entry_thresh, exit_thresh_percent)
         
         portfolio_value = res[1]
         
