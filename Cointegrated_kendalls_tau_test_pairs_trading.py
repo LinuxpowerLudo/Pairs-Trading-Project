@@ -278,7 +278,7 @@ def read_results(result):
 if __name__ == "__main__":
     print("Reading Data...")
     pairs, chosen_list = read_data()
-    print("Running Johansen's Backtest...")
+    print("Running Cointegrated Kendall Tau's Backtest...")
     result = pairs_trade(pairs, chosen_list = chosen_list)
     print("*********** Backtest Results ***********")
     read_results(result)
