@@ -236,7 +236,7 @@ def kalman_backtest(sym1, sym2, entry_thresh, exit_thresh_percent):
     
     return main_df, port_val,total_return,annualised_sharpe
 
-def pairs_trade(pairs, chosen_list = None):
+def pairs_trade(pairs, chosen_list = None, entry_thresh, exit_thresh_percent):
     
     #assign variables to output
     if chosen_list == None:
@@ -317,6 +317,6 @@ if __name__ == "__main__":
     print("Reading Data...")
     pairs, chosen_list = read_data()
     print("Running Kalman Backtest...")
-    result = pairs_trade(pairs, chosen_list = chosen_list)
+    result = pairs_trade(pairs, chosen_list = chosen_list, entry_thresh = 1, exit_thresh_percent = 0)
     print("*********** Backtest Results ***********")
     read_results(result)
